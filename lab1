@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node{
+    char ch;
+    struct Node *next;
+}Node;
+
+Node* create_node(char c)
+{
+    Node *newnode = (Node*)malloc(sizeof(Node));
+    newnode->ch = c;
+    newnode->next = NULL;
+    return newnode;
+}
+
+void append(Node **head, Node **tail, char c)
+{
+    Node *newnode = create_node(c);
+
+    if(*head == NULL)
+    {
+        *head = newnode;
+        *tail = newnode;
+    }
+    else
+    {
+        (*tail)->next = newnode;
+        *tail = newnode;
+    }
+}
+
+void print_list(Node *head)
+{
+    Node *curr = head;
+
+    while(curr != NULL)
+    {
+        if(curr->ch == '\n')
+            printf("'\\n'\n");
+        else if(curr->ch == '\t')
+            printf("'\\t'\n");
+        else if(curr->ch == ' ')
+            printf("' '\n");
+        else
+            printf("'%c'\n", curr->ch);
+
+        curr = curr->next;
+    }
+}
+
+int main()
+{
+    FILE *fp;
+    int c;
+
+    Node *head = NULL;
+    Node *tail = NULL;
+
+    fp = fopen(__FILE__, "r");
+
+    if(fp == NULL)
+    {
+        printf("Cannot open file\n");
+        return 1;
+    }
+
+    while((c = fgetc(fp)) != EOF)
+    {
+        append(&head, &tail, (char)c);
+    }
+
+    fclose(fp);
+
+    printf("Scanner Output:\n");
+    printf("-----------------\n");
+
+    print_list(head);
+
+    return 0;
+}
